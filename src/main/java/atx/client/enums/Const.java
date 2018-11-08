@@ -12,6 +12,9 @@ public class Const {
     //接收shell命令 URI
     public static final String SHELL_URI = "/shell";
 
+    //install 安装
+    public static final String INSTALL = "/install";
+
     //截图uri
     public static final String SCREENSHOT_URI = "/screenshot/0";
 
@@ -21,12 +24,13 @@ public class Const {
     //每个循环超时时间
     public static int WAIT_ELEMENT_TIME_INTERVAL = 200;
 
-    public static String XML_PATH = "/xml/now.xml";
+    public static String XML_PATH = "/xml/";
 
     public static Integer PORT_SHELL = 7912;
 //
     public static Integer PORT_UI = 7912;
 
+    public static String xmlFileName = "now.xml";
     //在uiautomator服务上增加了 shell接口
 //    public static Integer PORT_SHELL = 9999;
 

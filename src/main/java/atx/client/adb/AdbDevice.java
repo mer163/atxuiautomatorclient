@@ -28,6 +28,8 @@ public class AdbDevice {
 
 	private static Pattern STRING_PATTERN = Pattern.compile("([a-zA-Z0-9.]+/.[a-zA-Z0-9.]+)");
 
+	private static Pattern STRING_PATTERN_PACKAGE = Pattern.compile("([a-zA-Z0-9.]+)");
+
 	private static Pattern PID_PATTERN = Pattern.compile("([\" \"][0-9]+)");
 
 	private static AdbDevice mInstance;
@@ -156,6 +158,42 @@ public class AdbDevice {
 		}
 
 		return status;
+	}
+
+	/**
+	 * 解锁屏幕
+	 */
+	public void unlock_device() throws InterruptedException {
+
+		ArrayList<String> component = ReUtils.matchString(STRING_PATTERN_PACKAGE, shellUtils.shellPost("pm list packages -3"));
+		//使用appium.apk 解锁屏幕
+		if (!component.contains("io.appium.unlock")){
+			install("https://raw.githubusercontent.com/pengchenglin/ATX-GT/master/apk/unlock.apk");
+			Thread.sleep(5000);
+		}
+		shellUtils.shellPost("monkey -p io.appium.unlock -c android.intent.category.LAUNCHER 1");
+		shellUtils.shellPost("input keyevent 3");
+	}
+
+
+	//远程安装apk
+	public String install(String apkPath){
+		String url;
+		String resultid;
+		if(desiredCapabilities.getRemoteHost().contains("http")){
+			url = desiredCapabilities.getRemoteHost();
+		}else {
+			url = "http://" + desiredCapabilities.getRemoteHost() + ":" + Const.PORT_SHELL + Const.INSTALL;
+		}
+		OkHttpClientMethod okHttpClientMethod = OkHttpClientMethod.getInstance();
+
+		Map<String,Object> headers = new HashMap<String,Object>();
+		headers.put("Content-Type","application/x-www-form-urlencoded");
+
+		Map<String,Object> params = new HashMap<String,Object>();
+		params.put("url",apkPath);
+		resultid = (String) okHttpClientMethod.postMethod(url,params,headers);
+		return resultid;
 	}
 
 	/**
@@ -358,6 +396,14 @@ public class AdbDevice {
 	}
 
 	/**
+	 * 安装app
+	 * @param apkPath
+	 */
+	public void installApp(String apkPath){
+
+	}
+
+	/**
 	 * 清除应用的用户数据
 	 *
 	 * @param packageName
@@ -397,13 +443,22 @@ public class AdbDevice {
 	}
 
 	/**
-	 * 启动一个应用
+	 * 启动一个activity
 	 *
 	 * @param component
-	 *            应用包名加主类名，packageName/Activity
+	 *            packageName/Activity
 	 */
 	public void startActivity(String component) {
 		shellUtils.shellPost("am start -n " + component);
+	}
+
+	/**
+	 * 通过包名启动app
+	 * @param packageName
+	 */
+	public void startApp(String packageName) throws InterruptedException {
+		shellUtils.shellPost("monkey -p "+ packageName + " -c android.intent.category.LAUNCHER 1");
+		Thread.sleep(3000);
 	}
 
 	/**
@@ -675,7 +730,10 @@ public class AdbDevice {
 //				sendKeyEvent(AndroidKeyCode.SPACE);
 //			}
 //		}
-		shellUtils.shellPost("am broadcast -a ADB_INPUT_TEXT --es msg '" + text +"'");
+		String result = shellUtils.shellPost("am broadcast -a ADB_INPUT_TEXT --es msg '" + text +"'");
+		if (result.contains("result=0")){
+			result = shellUtils.shellPost("input text " + text);
+		}
 	}
 
 	/**

@@ -9,4 +9,5 @@ public interface ElementAttribs {
 	int CONTENTDESC = 5;
 	int CLICKABLE = 6;
 	int BOUNDS = 7;
+	int XPATH = 8;
 }

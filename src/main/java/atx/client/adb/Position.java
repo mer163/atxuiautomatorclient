@@ -2,6 +2,7 @@ package atx.client.adb;
 
 import atx.client.common.ShellUtils;
 import atx.client.enums.Const;
+import atx.client.model.AndroidElement;
 import atx.client.model.AtxDriver;
 import atx.client.model.DesiredCapabilities;
 import org.dom4j.Document;
@@ -30,7 +31,9 @@ public class Position {
 	@SuppressWarnings("rawtypes")
 	private ArrayList<HashMap> attribs = null;
 	private InputStream xml = null;
-	private List<UiDump> dumps = null;
+	private List<AndroidElement> dumps = null;
+	private List<UiDump> adbdumps = null;
+
 
 	private static Position mInstance;
 
@@ -69,12 +72,12 @@ public class Position {
 		String path = null;
 		try {
 			path = directory.getCanonicalPath();
-			path = path + Const.XML_PATH;
+			path = path + Const.XML_PATH + Const.xmlFileName;
 			xml = new FileInputStream(new File(path));
 		} catch (Exception e){
 			e.printStackTrace();
 		}
-		dumps = new UiDumpService().getDumps(xml);
+		adbdumps = new UiDumpService().getDumps(xml);
 	}
 
 	/**
@@ -443,7 +446,7 @@ public class Position {
 	// 获取单个元素属性值集合
 	private HashMap<Integer, String> getAttrib(int att, String str) {
 		attrib = new HashMap<Integer, String>();
-		for (UiDump dump : dumps) {
+		for (UiDump dump : adbdumps) {
 			Boolean flag = false;
 			switch (att) {
 			case 0:
@@ -490,9 +493,10 @@ public class Position {
 	// 获取多个元素的属性值集合
 	@SuppressWarnings("rawtypes")
 	private ArrayList<HashMap> getAttribs(int att, String str) {
+		uidump();
 		HashMap<Integer, String> temp = null;
 		attribs = new ArrayList<HashMap>();
-		for (UiDump dump : dumps) {
+		for (UiDump dump : adbdumps) {
 			Boolean flag = false;
 			switch (att) {
 			case 0:

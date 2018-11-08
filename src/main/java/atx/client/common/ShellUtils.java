@@ -75,11 +75,11 @@ public class ShellUtils {
         if(desiredCapabilities.getRemoteHost().contains("http")){
             url = desiredCapabilities.getRemoteHost();
         }else {
-            url = "http://" + desiredCapabilities.getRemoteHost() + ":7912";
+            url = "http://" + desiredCapabilities.getRemoteHost() + ":" + Const.PORT_SHELL ;
         }
 
         JSONObject result = JSONObject.fromObject(OkHttpClientMethod.getInstance().postByteMethod(url + Const.BASE_URI, ElementObj.baseRequestJson(MethodEnum.DUMP_WINDOWS_HIERARCHY.getValue(),params)));
-        FileMethodUtils.generateXML(Const.XML_PATH,result.getString("result"));
+        FileMethodUtils.generateXML(Const.XML_PATH,Const.xmlFileName,result.getString("result"));
 
     }
 

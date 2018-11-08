@@ -1,5 +1,7 @@
 package atx.client.model;
 
+import org.apache.xpath.operations.Bool;
+
 /**
  * 初始化对象数据模型
  * Created by 飞狐 on 2018/4/22.
@@ -13,6 +15,13 @@ public class DesiredCapabilities {
 
     //远程手机地址
     private String remoteHost;
+
+    //设备序列号
+    private String udid;
+
+
+
+    private boolean startApp;
 
     public String getPlatformName() {
         return platformName;
@@ -36,5 +45,21 @@ public class DesiredCapabilities {
 
     public void setRemoteHost(String remoteHost) {
         this.remoteHost = remoteHost;
+    }
+
+    public String getUdid() {
+        return udid;
+    }
+
+    public void setUdid(String udid) {
+        this.udid = udid;
+    }
+
+    public boolean isStartApp() {
+        return startApp;
+    }
+
+    public void setStartApp(boolean startApp) {
+        this.startApp = startApp;
     }
 }

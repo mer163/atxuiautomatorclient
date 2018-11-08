@@ -1,3 +1,12 @@
+###增加findby注解方式获取元素，保存至elementList中
+```$xslt
+field.setAccessible(true);
+FindElementBy findby = field.getAnnotation(FindElementBy.class);
+AndroidElement element;
+List<AndroidElement> elementList;
+```
+
+
 基于@codeskyblue
 https://github.com/openatx/uiautomator2
 开源的atx app自动化解决方案，开发的java版atx-client

@@ -1,0 +1,5 @@
+atx.client
+atx.client.adb
+atx.client.common
+atx.client.enums
+atx.client.model

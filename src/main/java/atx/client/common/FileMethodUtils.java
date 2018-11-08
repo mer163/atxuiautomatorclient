@@ -16,19 +16,24 @@ public class FileMethodUtils {
 	 * @param filePath
 	 * @param content
 	 */
-	public static void generateXML(String filePath, String content){
+	public static void generateXML(String folderName, String fileName, String content){
 
 		File directory  = new File(".");
 		String path = null;
 		try {
 		path = directory .getCanonicalPath();
-		path = path + filePath;
+		File filepath = new File(path + folderName);
+		if(!filepath.exists()){
+			filepath.mkdirs();
+		}
+		File file = new File(filepath,fileName);
+
 
 		// 创建输出格式(OutputFormat对象)
 		OutputFormat format = OutputFormat.createPrettyPrint();
 		// 创建XMLWriter对象
 
-			XMLWriter writer = new XMLWriter(new FileOutputStream(new File(path)), format);
+			XMLWriter writer = new XMLWriter(new FileOutputStream(file), format);
 			//设置不自动进行转义
 			writer.setEscapeText(false);
 			// 生成XML文件
